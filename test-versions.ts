@@ -27,7 +27,6 @@ const tryHashWithMetadataVersion = async (
 };
 
 // check all networks
-const networksWithIssue: string[] = [];
 for (const network of Object.values(NETWORKS)) {
   console.log("Checking", network.name);
   const client = createClient(
