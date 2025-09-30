@@ -17,6 +17,5 @@ for (const network of Object.values(NETWORKS))
     networksWithIssue.push(network.name);
 
 // output summary
-console.log();
 console.log("Networks with broken CheckMetadataHash:");
 for (const networkName of networksWithIssue) console.log("- " + networkName);

@@ -1,14 +1,14 @@
+import type { Polkadot } from "@polkadot-api/descriptors";
 import {
   Binary,
   createClient,
   InvalidTxError,
   type PolkadotSigner,
 } from "polkadot-api";
-import type { SubstrateNetwork } from "./networks";
 import { getWsProvider } from "polkadot-api/ws-provider";
-import type { Polkadot } from "@polkadot-api/descriptors";
-import { getMetadataHash } from "./getMetadataHash";
 import { getCheckMetadataHash } from "./getCheckMetadataHash";
+import { getMetadataHash } from "./getMetadataHash";
+import type { SubstrateNetwork } from "./networks";
 
 /**
  *
@@ -20,6 +20,7 @@ export const checkNetwork = async (
   network: SubstrateNetwork,
   signer: PolkadotSigner
 ) => {
+  console.log("Checking", network.name);
   const client = createClient(getWsProvider(network.rpcUrl));
 
   try {
@@ -29,38 +30,39 @@ export const checkNetwork = async (
     });
 
     const metadataHash = await getMetadataHash(api, network.tokenInfo);
+    console.log("Metadata hash:", `0x${metadataHash.toHex()}`);
 
-    console.log("Submitting tx without metadataHash", network.name);
-    await canSubmit(extrinsic, signer, null);
-    console.log("Submitting tx with metadataHash", network.name);
-    return await canSubmit(extrinsic, signer, metadataHash);
+    await isValidMetadataHash(extrinsic, signer, null);
+    return await isValidMetadataHash(extrinsic, signer, metadataHash);
   } catch (err) {
-    console.error("Failed to process network", network.name, err);
+    console.error("Failed to process network", err);
     return true; // we don't know, so assume it's fine
   } finally {
     client.destroy();
+    console.log();
   }
 };
 
-const canSubmit = async (
+const isValidMetadataHash = async (
   extrinsic: any,
   signer: PolkadotSigner,
   metadataHash: Uint8Array | null
 ) => {
+  const label = metadataHash ? "with metadataHash:" : "without metadataHash:";
   try {
     const res = await extrinsic.signAndSubmit(signer, {
       customSignedExtensions: {
         CheckMetadataHash: getCheckMetadataHash(metadataHash),
       },
     });
-    console.log(res.ok ? "tx success" : "tx failed (but was submitted)");
+    console.log(label, res.ok ? "tx success" : "tx failed (but was submitted)");
     return true; // if tx was submitted, there is no CheckMetadataHash issue
   } catch (err) {
     if (err instanceof InvalidTxError) {
-      console.log("tx rejected:", err.error.value.type);
+      console.log(label, "tx rejected:", err.error.value.type);
       if (err.error.value.type === "BadProof") return false;
     } else {
-      console.log("tx rejected", { err });
+      console.log(label, "tx rejected", { err });
     }
     return true; // we don't know why it failed, could be a balance issue => assume there is no CheckMetadataHash issue
   }
