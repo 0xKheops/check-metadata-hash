@@ -47,15 +47,15 @@ export const NETWORKS: Record<string, SubstrateNetwork> = {
     rpcUrl: "wss://rpc.ibp.network/paseo",
     tokenInfo: {
       tokenSymbol: "PAS",
-      decimals: 12,
+      decimals: 10,
     },
   },
   passetHub: {
     name: "Passet Hub",
     rpcUrl: "wss://sys.ibp.network/asset-hub-paseo",
     tokenInfo: {
-      tokenSymbol: "PASET",
-      decimals: 12,
+      tokenSymbol: "PAS",
+      decimals: 10,
     },
   },
 };
