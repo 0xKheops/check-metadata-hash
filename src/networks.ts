@@ -1,6 +1,6 @@
 export type SubstrateNetwork = {
   name: string;
-  rpcUrl: string;
+  rpcUrl: string | string[];
   tokenInfo: {
     tokenSymbol: string;
     decimals: number;
@@ -18,7 +18,6 @@ export const NETWORKS: Record<string, SubstrateNetwork> = {
   },
   polkadotAssetHub: {
     name: "Polkadot Asset Hub",
-    // rpcUrl: "ws://localhost:8001", // chopsticks
     rpcUrl: "wss://sys.ibp.network/statemint",
     tokenInfo: {
       tokenSymbol: "DOT",
@@ -35,7 +34,6 @@ export const NETWORKS: Record<string, SubstrateNetwork> = {
   },
   kusamaAssetHub: {
     name: "Kusama Asset Hub",
-    // rpcUrl: "ws://localhost:8000", // chopsticks
     rpcUrl: "wss://sys.ibp.network/asset-hub-kusama",
     tokenInfo: {
       tokenSymbol: "KSM",

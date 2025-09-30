@@ -5,10 +5,11 @@ import {
   InvalidTxError,
   type PolkadotSigner,
 } from "polkadot-api";
-import { getWsProvider } from "polkadot-api/ws-provider";
+import { getWsProvider } from "polkadot-api/ws-provider/node";
 import { getCheckMetadataHash } from "./getCheckMetadataHash";
 import { getMetadataHash } from "./getMetadataHash";
 import type { SubstrateNetwork } from "./networks";
+import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
 
 /**
  *
@@ -21,7 +22,13 @@ export const checkNetwork = async (
   signer: PolkadotSigner
 ) => {
   console.log("Checking", network.name);
-  const client = createClient(getWsProvider(network.rpcUrl));
+  const client = createClient(
+    withPolkadotSdkCompat(
+      getWsProvider(
+        Array.isArray(network.rpcUrl) ? network.rpcUrl : [network.rpcUrl]
+      )
+    )
+  );
 
   try {
     const api = client.getUnsafeApi<Polkadot>();

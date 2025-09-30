@@ -5,14 +5,11 @@ import { merkleizeMetadata } from "@polkadot-api/merkleize-metadata";
 
 export const getMetadataHash = async (
   api: UnsafeApi<Polkadot>,
-  tokenInfo: SubstrateNetwork["tokenInfo"]
+  tokenInfo: SubstrateNetwork["tokenInfo"],
+  version: number = 15
 ) => {
-  const versions: number[] = await api.apis.Metadata.metadata_versions();
-  const version = versions.filter((v) => v < 100).pop();
-  if (!version) throw new Error("no valid metadata version found");
-
   const metadataRpc = await api.apis.Metadata.metadata_at_version(version);
-  if (!metadataRpc) throw new Error("no metadata");
+  if (!metadataRpc) throw new Error(`Metadata v${version} is not available`);
 
   const metadataHash = merkleizeMetadata(
     metadataRpc.asBytes(),

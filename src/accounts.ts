@@ -38,3 +38,6 @@ export const charlie = getDevAccount("//Charlie", "Charlie");
 export const dave = getDevAccount("//Dave", "Dave");
 export const eve = getDevAccount("//Eve", "Eve");
 export const ferdie = getDevAccount("//Ferdie", "Ferdie");
+
+// This one shouldnt have any cents even on testnets
+export const trump = getDevAccount("//Trump", "Trump");
