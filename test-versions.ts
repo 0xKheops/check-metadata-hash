@@ -1,12 +1,10 @@
+import type { Polkadot } from "@polkadot-api/descriptors";
 import { createClient, type UnsafeApi } from "polkadot-api";
-import { alice, getAccount } from "./src/accounts";
-import { checkNetwork } from "./src/checkNetwork";
+import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
+import { toHex } from "polkadot-api/utils";
+import { getWsProvider } from "polkadot-api/ws-provider";
 import { getMetadataHash } from "./src/getMetadataHash";
 import { NETWORKS, type SubstrateNetwork } from "./src/networks";
-import { withPolkadotSdkCompat } from "polkadot-api/polkadot-sdk-compat";
-import { getWsProvider } from "polkadot-api/ws-provider";
-import type { Polkadot } from "@polkadot-api/descriptors";
-import { toHex } from "polkadot-api/utils";
 
 const tryHashWithMetadataVersion = async (
   api: UnsafeApi<Polkadot>,
